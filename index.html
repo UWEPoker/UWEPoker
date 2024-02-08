@@ -12,7 +12,7 @@
     </header>
     
    
-    <div id="blinds">Blinds: 25/50</div>
+    <div id="blinds">blinds: 25/50</div>
     <div id="timer">15:00</div>
     <div id="timer-bar"></div>
     <div id="chip-swap"></div>
@@ -45,7 +45,7 @@ function displayBlinds() {
         document.getElementById('blinds').textContent = 'BREAK';
         document.getElementById('chip-swap').style.color = 'transparent'; // Hide chip swap text
     } else {
-        document.getElementById('blinds').textContent = `Blinds: ${blind.small}/${blind.big}`;
+        document.getElementById('blinds').textContent = `BLINDS: ${blind.small}/${blind.big}`;
         if ((blind.small === 300 && blind.big === 600) || (blind.small === 3000 && blind.big === 6000)) {
             document.getElementById('chip-swap').textContent = 'CHIP SWAP';
             document.getElementById('chip-swap').style.color = '#FFFFFF'; // Set chip swap text color to white
