@@ -57,11 +57,17 @@ function displayBlinds() {
 }
 
 function displayTime() {
-    let minutes = Math.floor(timer / 60);
-    let seconds = timer % 60;
-    document.getElementById('timer').textContent = 
-        `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    let minutes, seconds;
+    if (currentBlindIndex === blinds.length - 1) {
+        document.getElementById('timer').textContent = '--:--';
+    } else {
+        minutes = Math.floor(timer / 60);
+        seconds = timer % 60;
+        document.getElementById('timer').textContent = 
+            `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
 }
+
 
 function updateTimerBar() {
     const percentRemaining = (timer / timerDuration) * 100;
