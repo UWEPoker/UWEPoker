@@ -11,19 +11,24 @@
         <h1>UWE Poker Society</h1>
     </header>
     
-   
-    <div id="blinds">blinds: 25/50</div>
+    <h3>Blinds</h3>
+    <div id="blinds"><span id="current-blinds">25/50</span></div>
+    <div id="next-blinds"> <span id="next-blinds-info"></span></div>
+    <h3>Time Remaining</h3>
     <div id="timer">15:00</div>
     <div id="timer-bar"></div>
     <div id="chip-swap"></div>
 
     
-    <section id="buttons">
+    <section class="buttons">
     <button onclick="startTimer()">Start</button>
     <button onclick="pauseTimer()">Pause</button>
     <button onclick="resetTimer()">Reset</button>
-    <button onclick="nextBlind()">Next Blind</button>
+    </section>
+    <section class="buttons">
     <button onclick="previousBlind()">Previous Blind</button>
+    <button onclick="nextBlind()">Next Blind</button>
+    
     </section>
 
 
@@ -40,12 +45,16 @@ let timer = timerDuration;
 let interval;
 
 function displayBlinds() {
-    const blind = blinds[currentBlindIndex];
+    const currentBlindsElement = document.getElementById('current-blinds');
+    const nextBlindsElement = document.getElementById('next-blinds-info');
+    const chipSwapElement = document.getElementById('chip-swap');
+
+    let blind = blinds[currentBlindIndex];
     if (blind === 'BREAK') {
-        document.getElementById('blinds').textContent = 'BREAK';
-        document.getElementById('chip-swap').style.color = 'transparent'; // Hide chip swap text
+        currentBlindsElement.textContent = 'BREAK';
+        nextBlindsElement.textContent = (currentBlindIndex + 1 < blinds.length) ? `${blinds[currentBlindIndex + 1]}` : '';
     } else {
-        document.getElementById('blinds').textContent = `BLINDS: ${blind.small}/${blind.big}`;
+        currentBlindsElement.textContent = `${blind.small}/${blind.big}`;
         if ((blind.small === 300 && blind.big === 600) || (blind.small === 3000 && blind.big === 6000)) {
             document.getElementById('chip-swap').textContent = 'CHIP SWAP';
             document.getElementById('chip-swap').style.color = '#FFFFFF'; // Set chip swap text color to white
@@ -54,7 +63,21 @@ function displayBlinds() {
             document.getElementById('chip-swap').style.color = 'transparent'; // Hide chip swap text
         }
     }
+
+    // Update next blinds display
+    const nextBlind = currentBlindIndex + 1 < blinds.length ? blinds[currentBlindIndex + 1] : null;
+    if (nextBlind) {
+        if (nextBlind === 'BREAK') {
+            nextBlindsElement.textContent = 'BREAK';
+        } else {
+            nextBlindsElement.textContent = `${nextBlind.small}/${nextBlind.big}`;
+        }
+    } else {
+        nextBlindsElement.textContent = 'End of Blinds';
+    }
 }
+
+
 
 function displayTime() {
     let minutes, seconds;
@@ -70,9 +93,15 @@ function displayTime() {
 
 
 function updateTimerBar() {
-    const percentRemaining = (timer / timerDuration) * 100;
-    document.getElementById('timer-bar').style.width = percentRemaining + '%';
+    // Check if on the final blind and stop updating the timer bar
+    if (currentBlindIndex >= blinds.length - 1) {
+        document.getElementById('timer-bar').style.width = '0%'; // Optionally, set to full width or hide
+    } else {
+        const percentRemaining = (timer / timerDuration) * 100;
+        document.getElementById('timer-bar').style.width = percentRemaining + '%';
+    }
 }
+
 
 function startTimer() {
     clearInterval(interval);
