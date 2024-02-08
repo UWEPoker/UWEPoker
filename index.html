@@ -19,7 +19,7 @@
     <div id="timer-bar"></div>
     <div id="chip-swap"></div>
 
-    
+    <audio id="endBlindSound" src="countdown.mp3" preload="auto"></audio>
     <section class="buttons">
     <button onclick="startTimer()">Start</button>
     <button onclick="pauseTimer()">Pause</button>
@@ -108,7 +108,13 @@ function startTimer() {
         if (timer > 0) {
             timer--;
             displayTime();
-            updateTimerBar(); // Update timer bar
+            updateTimerBar();
+
+            // Check if there are exactly 4 seconds left
+            if (timer === 3) {
+                var sound = document.getElementById("endBlindSound");
+                sound.play();
+            }
         } else {
             nextBlind();
         }
