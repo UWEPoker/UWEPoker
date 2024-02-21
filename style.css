@@ -4,7 +4,9 @@ body, h1, div, button {
     padding: 0;
     box-sizing: border-box;
 }
-
+#time-remaining-title {
+    margin-top: 10px;
+}
 
 #timer-bar, #first-break-timer-bar {
     background-color: green !important;
