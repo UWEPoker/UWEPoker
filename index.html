@@ -16,7 +16,7 @@
 
 
 
-    <h3>Blinds</h3>
+    <h3 id="bld">Blinds</h3>
     <div id="blinds"><span id="current-blinds">25/50</span></div>
     <div id="next-blinds"> <span id="next-blinds-info"></span></div>
     <h3>Time Remaining</h3>
@@ -145,20 +145,27 @@ function updateTimerBar() {
 
 
 function startTimer() {
-    clearInterval(interval);
+    clearInterval(interval); // Clear any existing interval to prevent duplicates.
     interval = setInterval(() => {
         if (timer > 0) {
-            timer--;
-            displayTime();
-            updateTimerBar();
-            updateFirstBreakTimerBar();
+            timer--; // Decrement the timer by one second.
+            displayTime(); // Update the display of the timer.
+            updateTimerBar(); // Update the visual representation of the timer.
+            updateFirstBreakTimerBar(); // Also update the first break timer bar as the timer counts down
+            
+            if (timer === 3) {
+                // Play sound with 3 seconds remaining
+                var sound = document.getElementById("endBlindSound");
+                if (sound) sound.play();
+            }
         } else {
             clearInterval(interval); // Stop the timer
             document.getElementById('timer').textContent = "00:00"; // Set timer text to 00:00
             document.getElementById('time-remaining-title').textContent = "Buy Ins Closed"; // Change the <h3> text
             // If you have an audio alert for end of timer, it can play here as well
             var sound = document.getElementById("endBlindSound");
-            sound.play();
+            
+            nextBlind()
             // Additional actions to take when timer ends, such as disabling buttons
         }
     }, 1000);
@@ -181,6 +188,7 @@ function nextBlind() {
     if (currentBlindIndex < blinds.length - 1) {
         currentBlindIndex++;
         timer = timerDuration;
+        startTimer();
         displayBlinds();
         displayTime();
         updateTimerBar(); 
