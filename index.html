@@ -10,7 +10,12 @@
         <img src="Poker Logo.jpeg" alt="Poker Society Logo">
         <h1>UWE Poker Society</h1>
     </header>
-    
+    <h3 id="time-remaining-title">BUY-INS TIMER</h3>
+
+    <div id="first-break-timer-bar" style="height: 20px; background-color: #ccc; width: 100%;"></div>
+
+
+
     <h3>Blinds</h3>
     <div id="blinds"><span id="current-blinds">25/50</span></div>
     <div id="next-blinds"> <span id="next-blinds-info"></span></div>
@@ -39,9 +44,13 @@
     {small: 6000, big: 12000}, {small: 15000, big: 30000}
 ];
 let currentBlindIndex = 0;
-let timerDuration = 15 * 60; // 15 minutes in seconds
+let timerDuration = 15 * 1; // 15 minutes in seconds
 let timer = timerDuration;
 let interval;
+let firstBreakIndex = blinds.findIndex(blind => blind === "BREAK");
+// Adjust totalTimeUntilFirstBreak to include the duration of the break
+let totalTimeUntilFirstBreak = (firstBreakIndex + 1) * timerDuration; // Including the break duration
+
 
 function displayBlinds() {
     const currentBlindsElement = document.getElementById('current-blinds');
@@ -76,6 +85,39 @@ function displayBlinds() {
     }
 }
 
+function updateFirstBreakTimerBar() {
+    // Calculate elapsed time since the tournament started
+    let elapsedTime = currentBlindIndex * timerDuration + (timerDuration - timer);
+    
+    // Adjust for the scenario where the currentBlindIndex has surpassed the firstBreakIndex (end of the break)
+    if (currentBlindIndex > firstBreakIndex) {
+        elapsedTime = totalTimeUntilFirstBreak; // Simulates that the break has ended
+    }
+    
+    // Calculate the percentage of time left until the end of the first break
+    const percentRemaining = Math.max(0, ((totalTimeUntilFirstBreak - elapsedTime) / totalTimeUntilFirstBreak) * 100);
+    
+    // Update the first break timer bar width
+    document.getElementById('first-break-timer-bar').style.width = percentRemaining + '%';
+
+    // Check if elapsedTime indicates the first break period has concluded
+    if (elapsedTime >= totalTimeUntilFirstBreak) {
+        document.getElementById('time-remaining-title').textContent = "BUY-INS CLOSED";
+    }
+}
+
+
+
+
+function displayFirstBreakTime() {
+    // Calculate total time until the first break
+    let totalTimeUntilBreak = firstBreakIndex * timerDuration; // Assuming each level before the break has the same duration
+    let minutes = Math.floor(totalTimeUntilBreak / 60);
+    let seconds = totalTimeUntilBreak % 60;
+    document.getElementById('first-break-timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+
 
 
 function displayTime() {
@@ -109,17 +151,20 @@ function startTimer() {
             timer--;
             displayTime();
             updateTimerBar();
-
-            // Check if there are exactly 4 seconds left
-            if (timer === 3) {
-                var sound = document.getElementById("endBlindSound");
-                sound.play();
-            }
+            updateFirstBreakTimerBar();
         } else {
-            nextBlind();
+            clearInterval(interval); // Stop the timer
+            document.getElementById('timer').textContent = "00:00"; // Set timer text to 00:00
+            document.getElementById('time-remaining-title').textContent = "Buy Ins Closed"; // Change the <h3> text
+            // If you have an audio alert for end of timer, it can play here as well
+            var sound = document.getElementById("endBlindSound");
+            sound.play();
+            // Additional actions to take when timer ends, such as disabling buttons
         }
     }, 1000);
 }
+
+
 
 function pauseTimer() {
     clearInterval(interval);
@@ -128,7 +173,8 @@ function pauseTimer() {
 function resetTimer() {
     timer = timerDuration;
     displayTime();
-    updateTimerBar(); // Update timer bar
+    updateTimerBar();
+    updateFirstBreakTimerBar(); // Update timer bar
 }
 
 function nextBlind() {
@@ -137,7 +183,8 @@ function nextBlind() {
         timer = timerDuration;
         displayBlinds();
         displayTime();
-        updateTimerBar(); // Update timer bar
+        updateTimerBar(); 
+        updateFirstBreakTimerBar();// Update timer bar
     }
 }
 
@@ -147,14 +194,16 @@ function previousBlind() {
         timer = timerDuration;
         displayBlinds();
         displayTime();
-        updateTimerBar(); // Update timer bar
+        updateTimerBar(); 
+        updateFirstBreakTimerBar();// Update timer bar
     }
 }
 
 // Initialize display
 displayBlinds();
 displayTime();
-updateTimerBar(); // Update timer bar
+updateTimerBar(); 
+displayFirstBreakTime();// Update timer bar
 
     </script>
 </body>
