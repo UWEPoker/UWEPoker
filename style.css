@@ -13,6 +13,9 @@ body, h1, div, button {
     margin-top: 0;
 }
 
+#poker-title {
+    color: #45a049;
+}
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
