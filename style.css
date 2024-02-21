@@ -54,6 +54,10 @@ header h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+#bld{
+    margin-top: 10px;
+}
+
 /* Styles for the blinds and timer */
 #timer, #next-blinds, #chip-swap {
     font-size: 2.5em; /* Adjusted for better readability */
@@ -118,5 +122,4 @@ button:active {
     gap: 10px; /* Space between buttons */
     margin: 10px 0; /* Margin around each button group for separation */
 }
-
 
