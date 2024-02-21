@@ -8,7 +8,7 @@
 <body>
     <header>
         <img src="Poker Logo.jpeg" alt="Poker Society Logo">
-        <h1>UWE Poker Society</h1>
+        <h1 id="poker-title">UWE Poker Society</h1>
     </header>
     <h3 id="time-remaining-title">BUY-INS TIMER</h3>
 
@@ -44,7 +44,7 @@
     {small: 6000, big: 12000}, {small: 15000, big: 30000}
 ];
 let currentBlindIndex = 0;
-let timerDuration = 15 * 1; // 15 minutes in seconds
+let timerDuration = 15 * 60; // 15 minutes in seconds
 let timer = timerDuration;
 let interval;
 let firstBreakIndex = blinds.findIndex(blind => blind === "BREAK");
